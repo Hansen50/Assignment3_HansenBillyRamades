@@ -10,6 +10,29 @@ https://www.figma.com/design/BY3xiRhkkUgDbniguZatOm/Travel-App?node-id=119-991&t
 
 Travel Mate is a travel application designed to help you find the best tourist destinations and plan your dream trip easily. This app offers a variety of interesting features, including recommended tourist attractions, local guides, and customizable itineraries.
 
+## Tech Stack
+
+- Android Studio
+- Kotlin
+- Local Database (DAO)
+- Network Database (API)
+- Clean Architecture
+- MVVM
+
+## Library Used
+
+- DataStore
+- Lifecycle (livedata)
+- Room
+- Retrofit
+- Dependency Injection
+- Dagger Hilt
+- Mockito
+- Facebook Shimmer
+- Swipe Refresh
+- Api
+- OkHttp
+
 # Yang harus di perbaiki
 
 * Database ny pake Hilt
