@@ -20,3 +20,15 @@ Travel Mate is a travel application designed to help you find the best tourist d
 * halaman Change preference Ketika di buka dari login dan profile tolonf di adjust
 * Itinerary harus bisa delete and update
 * Ketika menghapus dan logout harus ada konfirmasi atau logout
+
+
+
+## User Interface
+![4](https://github.com/user-attachments/assets/cec19d92-be54-4384-8088-d7c00ec23b80)
+![5](https://github.com/user-attachments/assets/4ca70ec4-fa92-400a-85b0-c3d243598ffa)
+![6](https://github.com/user-attachments/assets/86ef7125-f39e-4f98-a479-e6c4229307ea)
+![7](https://github.com/user-attachments/assets/7d41ecb1-a373-4fd2-9dd4-1c0580aafe2b)
+
+
+## Demo
+Upcoming :)
