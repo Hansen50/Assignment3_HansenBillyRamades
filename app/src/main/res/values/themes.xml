@@ -1,0 +1,24 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Assignment3_HansenBillyRamades" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/blue</item>
+        <item name="android:windowIsTranslucent">true</item>
+    </style>
+
+    <style name="Theme.Assignment3_HansenBillyRamades" parent="Base.Theme.Assignment3_HansenBillyRamades" />
+
+    <style name="BottomNavigationView">
+        <item name="colorSecondaryContainer">@color/tertinary_green</item>
+    </style>
+
+    <style name="Theme.Assignment3_HansenBillyRamades.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="Theme.Assignment3_HansenBillyRamades.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="Theme.Assignment3_HansenBillyRamades.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+</resources>
