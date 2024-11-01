@@ -9,10 +9,10 @@ import com.example.assignment3_hansenbillyramades.data.source.local.dataStore
 import com.example.assignment3_hansenbillyramades.data.source.network.ApiService
 import com.example.assignment3_hansenbillyramades.data.source.network.UserRemoteDataSource
 import com.example.assignment3_hansenbillyramades.data.source.network.UserRemoteDataSourceImpl
-import com.example.assignment3_hansenbillyramades.data.repository.DestinationRepository
-import com.example.assignment3_hansenbillyramades.data.repository.DestinationRepositoryImpl
-import com.example.assignment3_hansenbillyramades.data.repository.UserRepository
-import com.example.assignment3_hansenbillyramades.data.repository.UserRepositoryImpl
+import com.example.assignment3_hansenbillyramades.domain.repository.DestinationRepository
+import com.example.assignment3_hansenbillyramades.domain.repository.DestinationRepositoryImpl
+import com.example.assignment3_hansenbillyramades.domain.repository.UserRepository
+import com.example.assignment3_hansenbillyramades.domain.repository.UserRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -6,18 +6,24 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
+import com.example.assignment3_hansenbillyramades.data.source.local.PreferenceDataStore
 import com.example.assignment3_hansenbillyramades.databinding.ActivityLoginBinding
 import com.example.assignment3_hansenbillyramades.domain.model.LoginRequest
 import com.example.assignment3_hansenbillyramades.domain.model.LoginState
 import com.example.assignment3_hansenbillyramades.presentation.viewModel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
-    private val viewModel: LoginViewModel by viewModels()
 
+    // Menyuntikkan PreferenceDataStore langsung ke Activity
+    @Inject
+    lateinit var preferenceDataStore: PreferenceDataStore
+
+    private val viewModel: LoginViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +36,8 @@ class LoginActivity : AppCompatActivity() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 viewModel.loginUsers(LoginRequest(email, password))
             } else {
-                Toast.makeText(this, "You have to fill email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "You have to fill email and password", Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
@@ -42,19 +49,35 @@ class LoginActivity : AppCompatActivity() {
                         viewModel.setToken(token)
                         val user = state.login.user
                         viewModel.setUserDetails(user)
-                        val intent = Intent(this@LoginActivity, OnBoardActivity::class.java)
+
+                        // Periksa status onboarded sebelum menentukan navigasi
+                        val isOnboarded =
+                            preferenceDataStore.isUserOnboarded() // Dapatkan status onboarded
+                        val intent = if (isOnboarded) {
+                            Intent(this@LoginActivity, MainActivity::class.java)
+                        } else {
+                            Intent(this@LoginActivity, OnBoardActivity::class.java)
+                        }
+
                         intent.putExtra("TOKEN", token)
                         startActivity(intent)
                         finish()
                     }
+
                     is LoginState.Error -> {
                         Toast.makeText(this@LoginActivity, state.message, Toast.LENGTH_SHORT).show()
                     }
-                    is LoginState.Loading -> {
 
+                    is LoginState.Loading -> {
+                        // Tampilkan loading jika perlu
                     }
                 }
             }
         }
     }
 }
+
+
+
+
+

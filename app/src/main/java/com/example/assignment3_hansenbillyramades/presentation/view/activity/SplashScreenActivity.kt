@@ -30,6 +30,14 @@ class SplashScreenActivity : AppCompatActivity() {
         }, splashDelay)
     }
 
+    private fun getRecommendedSelected() {
+        lifecycleScope.launch {
+            val userRecommended = preferenceDataStore.getSelectedRecommendationType()
+
+
+        }
+    }
+
     private fun getTokenFromDataStore() {
         lifecycleScope.launch {
             try {
@@ -46,7 +54,7 @@ class SplashScreenActivity : AppCompatActivity() {
                 startActivity(intent)
                 finish()
             } catch (e: Exception) {
-                e.printStackTrace() // Menangani error
+                e.printStackTrace()
             }
         }
     }

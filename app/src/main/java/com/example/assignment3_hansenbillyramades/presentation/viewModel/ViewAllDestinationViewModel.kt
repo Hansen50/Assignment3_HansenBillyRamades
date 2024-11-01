@@ -1,8 +1,8 @@
 package com.example.assignment3_hansenbillyramades.presentation.viewModel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.assignment3_hansenbillyramades.data.source.local.PreferenceDataStore
 import com.example.assignment3_hansenbillyramades.domain.model.DestinationState
 import com.example.assignment3_hansenbillyramades.domain.model.UserState
 import com.example.assignment3_hansenbillyramades.domain.usecase.GetListDestinationsUseCase
@@ -15,10 +15,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ExploreViewModel @Inject constructor(
+class ViewAllDestinationViewModel @Inject constructor(
     private val getListDestinationsUseCase: GetListDestinationsUseCase,
     private val loginUseCase: LoginUseCase,
-    private val preferenceDataStore: PreferenceDataStore
 ) : ViewModel() {
 
     private val _destinationState = MutableStateFlow<DestinationState>(DestinationState.Loading)
@@ -31,10 +30,6 @@ class ExploreViewModel @Inject constructor(
         return loginUseCase.getToken()
     }
 
-    suspend fun getSelectedType(): String? {
-        return preferenceDataStore.getSelectedRecommendationType()
-    }
-
     suspend fun getUserDetails() {
         try {
             val profile = loginUseCase.getUserDetails()
@@ -44,10 +39,11 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
-    fun loadDestinations(page: Int, token: String, name: String, type: String) {
-            viewModelScope.launch {
-                _destinationState.value = DestinationState.Loading
-                if (page <= 50) {
+
+    fun loadDestinations(page: Int, token: String, name: String?, type: String?) {
+        viewModelScope.launch {
+            _destinationState.value = DestinationState.Loading
+            if (page <= 50) {
                 try {
                     val destinations = getListDestinationsUseCase(page, token, name, type)
                     _destinationState.value = DestinationState.Success(destinations)

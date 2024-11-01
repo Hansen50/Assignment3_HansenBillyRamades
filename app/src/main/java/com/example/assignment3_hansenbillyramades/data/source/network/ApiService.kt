@@ -19,7 +19,15 @@ interface ApiService {
     suspend fun getDestinations(
         @Query("page") page: Int,
         @Header("Authorization") token: String,
-        @Query("name") name: String
+        @Query("name") name: String?,
+        @Query("type") type: String?
+    ): DestinationsDto
+
+
+    @GET("/travel")
+    suspend fun getAllDestinations(
+        @Query("page") page: Int,
+        @Header("Authorization") token: String,
     ): DestinationsDto
 
 }

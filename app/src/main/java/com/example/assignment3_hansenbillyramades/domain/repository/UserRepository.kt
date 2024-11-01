@@ -1,4 +1,4 @@
-package com.example.assignment3_hansenbillyramades.data.repository
+package com.example.assignment3_hansenbillyramades.domain.repository
 
 import com.example.assignment3_hansenbillyramades.data.model.LoginDto
 import com.example.assignment3_hansenbillyramades.domain.model.Login

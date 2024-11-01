@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.assignment3_hansenbillyramades.domain.model.DestinationState
 import com.example.assignment3_hansenbillyramades.domain.model.Destinations
-import com.example.assignment3_hansenbillyramades.data.repository.DestinationRepository
+import com.example.assignment3_hansenbillyramades.domain.repository.DestinationRepository
 import com.example.assignment3_hansenbillyramades.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -27,7 +27,7 @@ class DetailDestinationViewModel @Inject constructor(
         return loginUseCase.getToken()
     }
 
-    fun getDestinationDetail(id: Int, token: String, name: String, type: String) {
+    fun getDestinationDetail(id: Int, token: String, name: String?, type: String?) {
         viewModelScope.launch {
             _destinationState.value = DestinationState.Loading
             var page = 1

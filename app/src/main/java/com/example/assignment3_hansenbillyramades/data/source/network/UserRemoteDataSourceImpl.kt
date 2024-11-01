@@ -13,7 +13,12 @@ class UserRemoteDataSourceImpl @Inject constructor(private val apiService: ApiSe
     }
 
 
-    override suspend fun getDestinations(page: Int, token: String, name: String, type: String): DestinationsDto {
-        return apiService.getDestinations(page, token, name)
+
+    override suspend fun getDestinations(page: Int, token: String, name: String?, type: String?): DestinationsDto {
+        return apiService.getDestinations(page, token, name, type)
+    }
+
+    override suspend fun getAllDestinations(page: Int, token: String): DestinationsDto {
+        return apiService.getAllDestinations(page, token)
     }
 }

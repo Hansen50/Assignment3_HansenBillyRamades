@@ -2,9 +2,10 @@ package com.example.assignment3_hansenbillyramades.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.assignment3_hansenbillyramades.data.source.local.PreferenceDataStore
 import com.example.assignment3_hansenbillyramades.domain.model.DestinationState
 import com.example.assignment3_hansenbillyramades.domain.model.UserState
-import com.example.assignment3_hansenbillyramades.data.repository.UserRepository
+import com.example.assignment3_hansenbillyramades.domain.repository.UserRepository
 import com.example.assignment3_hansenbillyramades.domain.usecase.GetListDestinationsUseCase
 import com.example.assignment3_hansenbillyramades.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel  @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val preferenceDataStore: PreferenceDataStore
 ) : ViewModel() {
 
     private val _userState = MutableStateFlow<UserState>(UserState.Loading)
@@ -37,6 +39,7 @@ class ProfileViewModel  @Inject constructor(
         viewModelScope.launch {
             userRepository.logout()
             _userState.value = UserState.Logout
+//            preferenceDataStore.setOnboardedStatus(false)
         }
     }
 }

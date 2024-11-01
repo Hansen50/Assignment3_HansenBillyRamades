@@ -4,8 +4,8 @@ import com.example.assignment3_hansenbillyramades.data.model.LoginDto
 import com.example.assignment3_hansenbillyramades.domain.model.Login
 import com.example.assignment3_hansenbillyramades.domain.model.LoginRequest
 import com.example.assignment3_hansenbillyramades.domain.model.User
-import com.example.assignment3_hansenbillyramades.data.repository.UserRepository
-import com.example.assignment3_hansenbillyramades.data.repository.toLogin
+import com.example.assignment3_hansenbillyramades.domain.repository.UserRepository
+import com.example.assignment3_hansenbillyramades.domain.repository.toLogin
 import javax.inject.Inject
 
 class LoginUseCase @Inject constructor(private val userRepository: UserRepository) {

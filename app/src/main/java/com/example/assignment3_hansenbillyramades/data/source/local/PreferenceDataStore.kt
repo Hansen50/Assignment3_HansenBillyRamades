@@ -20,7 +20,9 @@ object DataStoreConstant {
     val AVATAR = stringPreferencesKey("AVATAR")
     val TOKEN = stringPreferencesKey("TOKEN")
     val IS_LOGIN = booleanPreferencesKey("IS_LOGIN")
+    val SELECTED_RECOMMENDATION_TYPE = stringPreferencesKey("SELECTED_RECOMMENDATION_TYPE")
     val IS_SELECTED_RECOMMENDATION = booleanPreferencesKey("IS_SELECTED_RECOMMENDATION")
+    val IS_ONBOARDED = booleanPreferencesKey("IS_ONBOARDED")
 }
 
 class PreferenceDataStore private constructor(private val dataStore: DataStore<Preferences>) {
@@ -41,10 +43,30 @@ class PreferenceDataStore private constructor(private val dataStore: DataStore<P
         dataStore.edit { preferences -> preferences[DataStoreConstant.TOKEN] = setToken }
     }
 
+
+    // menyimpan user telah memilih
     suspend fun setRecommendationSelected(selected: Boolean) {
         dataStore.edit { preferences ->
             preferences[DataStoreConstant.IS_SELECTED_RECOMMENDATION] = selected
         }
+    }
+
+    suspend fun setOnboardedStatus(onboarded: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[DataStoreConstant.IS_ONBOARDED] = onboarded
+        }
+    }
+
+    // Menyimpan tipe rekomendasi yang dipilih ke data store
+    suspend fun setSelectedRecommendationType(type: String) {
+        dataStore.edit { preferences ->
+            preferences[DataStoreConstant.SELECTED_RECOMMENDATION_TYPE] = type
+        }
+    }
+
+    // Mengambil tipe rekomendasi yang dipilih
+    suspend fun getSelectedRecommendationType(): String? {
+        return dataStore.data.first()[DataStoreConstant.SELECTED_RECOMMENDATION_TYPE]
     }
 
     suspend fun getToken(): String? {
@@ -67,6 +89,11 @@ class PreferenceDataStore private constructor(private val dataStore: DataStore<P
         }
     }
 
+    suspend fun isUserOnboarded(): Boolean {
+        return dataStore.data.first()[DataStoreConstant.IS_ONBOARDED] ?: false
+    }
+
+    // nge cek apa sudah memilih rekomen
     suspend fun hasSelectedRecommendation(): Boolean {
         return dataStore.data.first()[DataStoreConstant.IS_SELECTED_RECOMMENDATION] ?: false
     }

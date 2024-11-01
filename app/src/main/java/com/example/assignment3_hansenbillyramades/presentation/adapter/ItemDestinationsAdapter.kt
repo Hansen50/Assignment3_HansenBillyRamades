@@ -2,6 +2,7 @@ package com.example.assignment3_hansenbillyramades.presentation.adapter
 
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -59,10 +60,12 @@ class ItemDestinationsAdapter(
 
     // menambhakn daftar list apabila load baru
     fun addDestinations(newDestinations: List<Destinations>) {
+        val startPosition = listDestination.size
         val updatedList = listDestination.toMutableList()
         updatedList.addAll(newDestinations)
         listDestination = updatedList
-        notifyItemRangeInserted(listDestination.size - newDestinations.size, newDestinations.size)
+        notifyItemRangeInserted(startPosition, newDestinations.size)
+        Log.d("ItemDestinationsAdapter", "Added ${newDestinations.size} items, total: ${listDestination.size}")
     }
 
 }

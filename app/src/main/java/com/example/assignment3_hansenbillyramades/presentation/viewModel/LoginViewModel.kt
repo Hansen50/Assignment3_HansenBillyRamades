@@ -6,7 +6,7 @@ import com.example.assignment3_hansenbillyramades.data.source.local.PreferenceDa
 import com.example.assignment3_hansenbillyramades.domain.model.LoginRequest
 import com.example.assignment3_hansenbillyramades.domain.model.LoginState
 import com.example.assignment3_hansenbillyramades.domain.model.User
-import com.example.assignment3_hansenbillyramades.data.repository.toLogin
+import com.example.assignment3_hansenbillyramades.domain.repository.toLogin
 import com.example.assignment3_hansenbillyramades.domain.usecase.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -38,6 +38,12 @@ class LoginViewModel @Inject constructor(
             try {
                 val login = loginUseCase(request)
                 _loginState.value = LoginState.Success(login)
+
+                // Set token dan detail pengguna setelah login berhasil
+                setToken(login.token)
+                setUserDetails(login.user)
+                preferenceDataStore.setOnboardedStatus(true) // Atur status onboarded ke true setelah login
+
             } catch (e: Exception) {
                 _loginState.value = LoginState.Error(e.message ?: "Login failed")
             }

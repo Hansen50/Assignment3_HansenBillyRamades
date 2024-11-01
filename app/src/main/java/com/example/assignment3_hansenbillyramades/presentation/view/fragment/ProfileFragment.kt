@@ -1,5 +1,6 @@
 package com.example.assignment3_hansenbillyramades.presentation.view.fragment
 
+import android.content.DialogInterface
 import android.content.Intent
 import androidx.fragment.app.viewModels
 import android.os.Bundle
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import com.bumptech.glide.Glide
 import com.example.assignment3_hansenbillyramades.databinding.FragmentProfileBinding
@@ -40,12 +42,31 @@ class ProfileFragment : Fragment() {
 
         binding.cardMenuChangePreference.setOnClickListener {
             val intent = Intent(requireContext(), PreferencesTravelActivity::class.java)
+            intent.putExtra("FROM_PROFILE", true)
             startActivity(intent)
         }
 
         binding.btnLogout.setOnClickListener {
-            viewModel.logOut()
+            val alertDialog = AlertDialog.Builder(requireContext())
+            alertDialog.setTitle("Logout")
+            alertDialog.setMessage("Are you sure want to logout?")
+
+            alertDialog.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
+                viewModel.logOut()
+                dialog.dismiss()
+            }
+
+            alertDialog.setNegativeButton("No") { dialog: DialogInterface, which: Int ->
+                dialog.dismiss()
+            }
+
+            alertDialog.setCancelable(false)
+            alertDialog.show()
+
+
         }
+
+
 
         lifecycleScope.launch {
             viewModel.getUserDetails()

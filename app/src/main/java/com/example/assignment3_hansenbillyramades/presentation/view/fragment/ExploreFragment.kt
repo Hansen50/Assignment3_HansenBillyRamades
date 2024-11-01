@@ -19,6 +19,7 @@ import com.example.assignment3_hansenbillyramades.domain.model.UserState
 import com.example.assignment3_hansenbillyramades.presentation.adapter.ItemDestinationsAdapter
 import com.example.assignment3_hansenbillyramades.presentation.listener.ListDestinationListener
 import com.example.assignment3_hansenbillyramades.presentation.view.activity.DetailDestinationActivity
+import com.example.assignment3_hansenbillyramades.presentation.view.activity.ViewAllDestinationActivity
 import com.example.assignment3_hansenbillyramades.presentation.viewModel.ExploreViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -32,10 +33,9 @@ class ExploreFragment : Fragment(), ListDestinationListener {
     private lateinit var adapter: ItemDestinationsAdapter
     private val viewModel: ExploreViewModel by viewModels()
     private lateinit var token: String
-
-    // isLoading untuk mengatur pemanggil api dalam scroll
     private var isLoading = false
     private var currentPage = 1
+    private var selectedType: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,18 +50,29 @@ class ExploreFragment : Fragment(), ListDestinationListener {
 
         lifecycleScope.launch {
             token = "Bearer ${viewModel.getToken()}"
+            selectedType = arguments?.getString("SELECTED_TYPE") ?: ""
+            selectedType = viewModel.getSelectedType() ?: ""
+            if (selectedType.isNotEmpty()) {
+                binding.tvYourRecommendation.text = selectedType
+            }
 
             binding.rvDestinations.layoutManager = LinearLayoutManager(requireContext())
             adapter = ItemDestinationsAdapter(emptyList(), this@ExploreFragment)
             binding.rvDestinations.adapter = adapter
 
-            viewModel.loadDestinations(currentPage, token, "", "")
+            viewModel.loadDestinations(currentPage, token, "", selectedType)
             viewModel.getUserDetails()
 
             binding.swipeRefreshLayout.setOnRefreshListener {
                 currentPage = 1
-                viewModel.loadDestinations(currentPage, token, "", "")
+                viewModel.loadDestinations(currentPage, token, "", selectedType)
                 binding.swipeRefreshLayout.isRefreshing = false
+            }
+
+            binding.tvViewAll.setOnClickListener {
+                val intent = Intent(requireContext(), ViewAllDestinationActivity::class.java)
+                intent.putExtra("TOKEN", token)
+                startActivity(intent)
             }
 
             binding.svSearchDstination.setOnQueryTextListener(object :
@@ -70,10 +81,10 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                 override fun onQueryTextSubmit(search: String?): Boolean {
                     if (!search.isNullOrEmpty()) {
                         currentPage = 1
-                        viewModel.loadDestinations(currentPage, token, search, "")
+                        viewModel.loadDestinations(currentPage, token, search, selectedType)
                     } else {
                         currentPage = 1
-                        viewModel.loadDestinations(currentPage, token, "", "")
+                        viewModel.loadDestinations(currentPage, token, "", selectedType)
                     }
                     binding.svSearchDstination.clearFocus()
                     return true
@@ -82,7 +93,7 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                 override fun onQueryTextChange(newSearch: String?): Boolean {
                     if (newSearch.isNullOrEmpty()) {
                         currentPage = 1
-                        viewModel.loadDestinations(currentPage, token, "", "")
+                        viewModel.loadDestinations(currentPage, token, "", selectedType)
                     }
                     return false
                 }
@@ -99,7 +110,7 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                         currentPage++
                         // true akan memanggil load data api
                         isLoading = true
-                        viewModel.loadDestinations(currentPage, token, "", "")
+                        viewModel.loadDestinations(currentPage, token, "", selectedType)
                     }
                 }
             })
@@ -115,7 +126,7 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                                 binding.rvDestinations.isVisible = true
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 adapter.addDestinations(value.destinations)
-                                adapter.updateDestinations(value.destinations)
+//                                adapter.updateDestinations(value.destinations)
 
                                 isLoading = false
                             }

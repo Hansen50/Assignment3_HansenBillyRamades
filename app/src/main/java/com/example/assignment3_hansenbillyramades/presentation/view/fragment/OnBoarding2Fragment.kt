@@ -16,35 +16,28 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class OnBoarding2Fragment : Fragment() {
-
     private var _binding: FragmentOnBoarding2Binding? = null
     private val binding get() = _binding!!
-    private lateinit var token: String
-
     private val viewModel: OnBoardViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        _binding =
-            FragmentOnBoarding2Binding.inflate(inflater, container, false)
+        _binding = FragmentOnBoarding2Binding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        // TODO: Use the ViewModel
-
-        lifecycleScope.launch {
-            token = "Bearer ${viewModel.getToken()}"
-        }
 
         binding.btnStart.setOnClickListener {
-            val intent = Intent(requireContext(), PreferencesTravelActivity::class.java)
-            startActivity(intent)
+            lifecycleScope.launch {
+                viewModel.setOnboarded(true) // Simpan status onboarded
+                startActivity(Intent(requireContext(), PreferencesTravelActivity::class.java))
+                requireActivity().finish()
+            }
         }
-
     }
 
     override fun onDestroyView() {
@@ -52,3 +45,4 @@ class OnBoarding2Fragment : Fragment() {
         _binding = null
     }
 }
+

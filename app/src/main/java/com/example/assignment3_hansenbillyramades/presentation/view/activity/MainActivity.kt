@@ -38,12 +38,16 @@ class MainActivity : AppCompatActivity() {
                 return@launch
             }
 
+            // Ambil selectedType dari intent
+            val selectedType = intent.getStringExtra(PreferencesTravelActivity.EXTRA_SELECTED_TYPE) ?: ""
+            preferenceDataStore.getSelectedRecommendationType()
+
             binding.bottomNav.setOnItemSelectedListener(object :
                 NavigationBarView.OnItemSelectedListener {
                 override fun onNavigationItemSelected(menuItem: MenuItem): Boolean {
                     return when (menuItem.itemId) {
                         R.id.menu_explore -> {
-                            replaceFragment(ExploreFragment(), token)
+                            replaceFragment(ExploreFragment(), token, selectedType)
                             true
                         }
 
@@ -62,13 +66,16 @@ class MainActivity : AppCompatActivity() {
                 }
             })
 
-            replaceFragment(ExploreFragment(), token)
+            replaceFragment(ExploreFragment(), token, selectedType)
         }
     }
 
-    private fun replaceFragment(fragment: Fragment, token: String) {
+    private fun replaceFragment(fragment: Fragment, token: String, selectedType: String? = null) {
         val bundle = Bundle()
         bundle.putString("TOKEN", token)
+        if (selectedType != null) {
+            bundle.putString("SELECTED_TYPE", selectedType) // Menyimpan selectedType
+        }
         fragment.arguments = bundle
 
         supportFragmentManager.beginTransaction()

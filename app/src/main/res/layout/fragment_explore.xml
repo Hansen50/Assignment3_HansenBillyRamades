@@ -78,9 +78,23 @@
             android:layout_marginTop="12dp"
             android:text="Find Destination"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_view_all"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_greeting" />
+
+        <TextView
+            android:id="@+id/tv_view_all"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="View all"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/blue"
+            android:textAlignment="viewEnd"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintTop_toTopOf="@id/tv_find_destination"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_find_destination"/>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mc_card_view"
@@ -104,6 +118,30 @@
                 android:queryHint="Search Destination" />
         </com.google.android.material.card.MaterialCardView>
 
+        <TextView
+            android:id="@+id/tv_recommendation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Recommendation:"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginTop="12dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintTop_toBottomOf="@id/mc_card_view"
+            app:layout_constraintStart_toStartOf="@id/mc_card_view"/>
+
+        <TextView
+            android:id="@+id/tv_your_recommendation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="Your Recommendation"
+            android:textSize="14sp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toEndOf="@id/tv_recommendation"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tv_recommendation"
+            app:layout_constraintBottom_toBottomOf="@id/tv_recommendation"/>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_destinations"
@@ -112,15 +150,17 @@
             android:layout_marginTop="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/mc_card_view"
+            app:layout_constraintTop_toBottomOf="@id/tv_recommendation"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:listitem="@layout/list_item_destinations" />
 
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmer_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/mc_card_view">
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@id/tv_recommendation"
+            app:layout_constraintBottom_toBottomOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"

@@ -1,5 +1,6 @@
 package com.example.assignment3_hansenbillyramades.presentation.view.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -23,10 +24,15 @@ class OnBoardActivity : AppCompatActivity() {
         binding = ActivityOnBoardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        lifecycleScope.launch {
-            viewModel.getToken()
-        }
-
+//        lifecycleScope.launch {
+//            // Cek apakah sudah onboarded
+//            if (viewModel.isOnboarded()) {
+//                // Jika sudah onboarded, langsung ke halaman rekomendasi
+//                val intent = Intent(this@OnBoardActivity, OnBoardActivity::class.java)
+//                startActivity(intent)
+//                finish() // Tutup OnBoardActivity
+//            }
+//        }
 
         pagerAdapter = OnBoardingPagerAdapter(this)
         pagerAdapter.addFragment(OnBoarding1Fragment())
@@ -36,3 +42,5 @@ class OnBoardActivity : AppCompatActivity() {
         binding.dotsIndicator.setViewPager2(binding.viewPager)
     }
 }
+
+

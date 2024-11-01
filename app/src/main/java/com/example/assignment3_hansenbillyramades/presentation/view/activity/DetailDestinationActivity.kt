@@ -37,7 +37,7 @@ class DetailDestinationActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val destinationId = intent.getIntExtra("id_destination", 0)
             val token = "Bearer ${viewModel.getToken()}"
-            viewModel.getDestinationDetail(destinationId, token, "", "")
+            viewModel.getDestinationDetail(destinationId, token, null, null)
         }
 
         lifecycleScope.launch {

@@ -1,4 +1,4 @@
-package com.example.assignment3_hansenbillyramades.data.repository
+package com.example.assignment3_hansenbillyramades.domain.repository
 
 import android.util.Log
 import com.example.assignment3_hansenbillyramades.data.model.LoginDto
@@ -25,6 +25,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun logout() {
         preferenceDataStore.clearUserData()
+        preferenceDataStore.setOnboardedStatus(true)
     }
 
     override suspend fun getToken(): String? {

@@ -19,13 +19,12 @@ import kotlinx.coroutines.launch
 class OnBoarding1Fragment : Fragment() {
     private var _binding: FragmentOnBoarding1Binding? = null
     private val binding get() = _binding!!
-    private lateinit var token: String
 
     private val viewModel: OnBoardViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
+        savedInstanceState: Bundle?,
     ): View? {
         _binding = FragmentOnBoarding1Binding.inflate(inflater, container, false)
         return binding.root
@@ -34,29 +33,42 @@ class OnBoarding1Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            token = "Bearer ${viewModel.getToken()}"
+        viewLifecycleOwner.lifecycleScope.launch {
+            val token = "Bearer ${viewModel.getToken()}"
+            // Gunakan token sesuai kebutuhan di sini
         }
 
         binding.btnNext.setOnClickListener {
-            val currentItem = (activity as OnBoardActivity).binding.viewPager.currentItem
-
-            if (currentItem < (activity as OnBoardActivity).pagerAdapter.itemCount - 1) {
-                (activity as OnBoardActivity).binding.viewPager.currentItem = currentItem + 1
-            }
+            navigateToNextPage()
         }
 
         binding.btnSkip.setOnClickListener {
-            val intent = Intent(requireContext(), MainActivity::class.java)
-            startActivity(intent)
+            skipOnboarding()
         }
     }
 
-        override fun onDestroyView() {
-            super.onDestroyView()
-            _binding = null
+    private fun navigateToNextPage() {
+        val currentItem = (activity as OnBoardActivity).binding.viewPager.currentItem
+        if (currentItem < (activity as OnBoardActivity).pagerAdapter.itemCount - 1) {
+            (activity as OnBoardActivity).binding.viewPager.currentItem = currentItem + 1
         }
     }
+
+    private fun skipOnboarding() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.setOnboarded(true)
+        }
+        val intent = Intent(requireContext(), MainActivity::class.java)
+        startActivity(intent)
+        requireActivity().finish()
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
+    }
+}
+
 
 
 

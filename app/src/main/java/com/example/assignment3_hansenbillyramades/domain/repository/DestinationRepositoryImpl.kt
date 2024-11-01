@@ -1,4 +1,4 @@
-package com.example.assignment3_hansenbillyramades.data.repository
+package com.example.assignment3_hansenbillyramades.domain.repository
 
 import android.util.Log
 import com.example.assignment3_hansenbillyramades.data.model.DestinationsDto
@@ -11,8 +11,12 @@ class DestinationRepositoryImpl @Inject constructor(
     private val remoteDataSource: UserRemoteDataSource
 ) : DestinationRepository {
 
-    override suspend fun getDestinations(page: Int, token: String, name: String, type: String): List<Destinations> {
+    override suspend fun getDestinations(page: Int, token: String, name: String?, type: String?): List<Destinations> {
         return remoteDataSource.getDestinations(page, token, name, type).data?.mapNotNull { it?.toDestination() } ?: emptyList()
+    }
+
+    override suspend fun getAllDestinations(page: Int, token: String): List<Destinations> {
+        return remoteDataSource.getAllDestinations(page, token).data?.mapNotNull { it?.toDestination() } ?: emptyList()
     }
 }
 
