@@ -2,6 +2,8 @@ package com.example.assignment3_hansenbillyramades.presentation.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.assignment3_hansenbillyramades.data.source.local.ItineraryEntity
+import com.example.assignment3_hansenbillyramades.data.source.local.TravelMateDatabase
 import com.example.assignment3_hansenbillyramades.domain.model.DestinationState
 import com.example.assignment3_hansenbillyramades.domain.model.Destinations
 import com.example.assignment3_hansenbillyramades.domain.repository.DestinationRepository
@@ -18,6 +20,7 @@ import javax.inject.Inject
 class DetailDestinationViewModel @Inject constructor(
     private val repository: DestinationRepository,
     private val loginUseCase: LoginUseCase,
+    private val db: TravelMateDatabase,
 ) : ViewModel() {
 
     private val _destinationState = MutableStateFlow<DestinationState>(DestinationState.Loading)
@@ -44,7 +47,22 @@ class DetailDestinationViewModel @Inject constructor(
 
             } catch (e: Exception) {
                 _destinationState.value = DestinationState.Error(e.message ?: "An error occurred")
+
             }
+        }
+    }
+
+    fun addItinerary(itinerary: ItineraryEntity, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            db.itineraryDao().addItinerary(itinerary)
+            onSuccess()
+        }
+    }
+
+    fun updateItinerary(itinerary: ItineraryEntity, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            db.itineraryDao().updateItinerary(itinerary)
+            onSuccess()
         }
     }
 }

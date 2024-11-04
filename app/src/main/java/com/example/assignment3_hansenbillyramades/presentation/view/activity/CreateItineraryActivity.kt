@@ -14,18 +14,15 @@ import com.example.assignment3_hansenbillyramades.R
 import com.example.assignment3_hansenbillyramades.data.source.local.ItineraryEntity
 import com.example.assignment3_hansenbillyramades.data.source.local.TravelMateDatabase
 import com.example.assignment3_hansenbillyramades.databinding.ActivityCreateItineraryBinding
-import com.example.assignment3_hansenbillyramades.domain.model.DestinationState
 import com.example.assignment3_hansenbillyramades.domain.model.Destinations
 import com.example.assignment3_hansenbillyramades.presentation.viewModel.DetailDestinationViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class CreateItineraryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateItineraryBinding
     private val viewModel: DetailDestinationViewModel by viewModels()
-    private lateinit var db: TravelMateDatabase
     private var isEditMode: Boolean = false
     private lateinit var currentItinerary: ItineraryEntity
 
@@ -33,8 +30,6 @@ class CreateItineraryActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityCreateItineraryBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        db = TravelMateDatabase.getDatabase(this@CreateItineraryActivity)
 
         setSupportActionBar(binding.toolbarCreateItinerary)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -52,7 +47,7 @@ class CreateItineraryActivity : AppCompatActivity() {
             if (destination != null) {
                 setupDestinationView(destination)
             } else {
-                Toast.makeText(this, "Data tidak tersedia", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Data Not Aavailable", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -60,35 +55,39 @@ class CreateItineraryActivity : AppCompatActivity() {
             val notes = binding.etNotes.text.toString().trim()
 
             if (notes.isNotEmpty()) {
-                lifecycleScope.launch {
-                    if (isEditMode) {
-                        currentItinerary.note = notes
-                        db.itineraryDao().updateItinerary(currentItinerary)
+                if (isEditMode) {
+                    currentItinerary.note = notes
+                    viewModel.updateItinerary(currentItinerary) {
                         Toast.makeText(this@CreateItineraryActivity, "Itinerary updated!", Toast.LENGTH_SHORT).show()
-                    } else {
-                        val itinerary = ItineraryEntity(
-                            destinationId = destination?.id ?: 0,
-                            destinationName = destination?.name ?: "",
-                            cityName = destination?.location ?: "",
-                            description = destination?.description ?: "",
-                            rating = destination?.popularity ?: "",
-                            type = destination?.type ?: "",
-                            activities = destination?.type ?: "",
-                            note = notes,
-                            image = destination?.image ?: ""
-                        )
-                        db.itineraryDao().addItinerary(itinerary)
-                        Toast.makeText(this@CreateItineraryActivity, "Itinerary saved!", Toast.LENGTH_SHORT).show()
+                        navigateToMainActivity()
                     }
-
-                    val intent = Intent(this@CreateItineraryActivity, MainActivity::class.java)
-                    startActivity(intent)
-                    finish()
+                } else {
+                    val itinerary = ItineraryEntity(
+                        destinationId = destination?.id ?: 0,
+                        destinationName = destination?.name ?: "",
+                        cityName = destination?.location ?: "",
+                        description = destination?.description ?: "",
+                        rating = destination?.popularity ?: "",
+                        type = destination?.type ?: "",
+                        activities = destination?.type ?: "",
+                        note = notes,
+                        image = destination?.image ?: ""
+                    )
+                    viewModel.addItinerary(itinerary) {
+                        Toast.makeText(this@CreateItineraryActivity, "Itinerary saved!", Toast.LENGTH_SHORT).show()
+                        navigateToMainActivity()
+                    }
                 }
             } else {
                 Toast.makeText(this, "Notes cannot be empty", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun navigateToMainActivity() {
+        val intent = Intent(this@CreateItineraryActivity, MainActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun setupEditMode(itinerary: ItineraryEntity) {
@@ -130,11 +129,6 @@ class CreateItineraryActivity : AppCompatActivity() {
             setScale(0.8f, 0.8f, 0.8f, 1f)
         }
         binding.ivDestinationPlaceholder.colorFilter = ColorMatrixColorFilter(colorMatrix)
-
-        lifecycleScope.launch {
-            val token = "Bearer ${viewModel.getToken()}"
-            viewModel.getDestinationDetail(destination.id, token, null, null)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -16,12 +17,17 @@ import com.example.assignment3_hansenbillyramades.R
 import com.example.assignment3_hansenbillyramades.data.source.local.ItineraryEntity
 import com.example.assignment3_hansenbillyramades.data.source.local.TravelMateDatabase
 import com.example.assignment3_hansenbillyramades.databinding.ActivityDetailItineraryBinding
+import com.example.assignment3_hansenbillyramades.presentation.viewModel.ItineraryViewModel
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class DetailItineraryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityDetailItineraryBinding
     private lateinit var itinerary: ItineraryEntity
     private lateinit var db: TravelMateDatabase
+
+    private val viewModel: ItineraryViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,7 +97,7 @@ class DetailItineraryActivity : AppCompatActivity() {
 
             alertDialog.setPositiveButton("Yes") { dialog: DialogInterface, which: Int ->
             lifecycleScope.launch {
-                db.itineraryDao().deleteItinerary(itinerary)
+                viewModel.deleteItinerary(itinerary)
             }
                 Toast.makeText(
                     this@DetailItineraryActivity,

@@ -79,14 +79,9 @@ class ExploreFragment : Fragment(), ListDestinationListener {
 
             binding.svSearchDstination.setOnQueryTextListener(object :
                 SearchView.OnQueryTextListener {
-
                 override fun onQueryTextSubmit(search: String?): Boolean {
                     if (!search.isNullOrEmpty()) {
-                        currentPage = 1
                         viewModel.loadDestinations(currentPage, token, search, selectedType)
-                    } else {
-                        currentPage = 1
-                        viewModel.loadDestinations(currentPage, token, "", selectedType)
                     }
                     binding.svSearchDstination.clearFocus()
                     return true
@@ -94,12 +89,13 @@ class ExploreFragment : Fragment(), ListDestinationListener {
 
                 override fun onQueryTextChange(newSearch: String?): Boolean {
                     if (newSearch.isNullOrEmpty()) {
-                        currentPage = 1
                         viewModel.loadDestinations(currentPage, token, "", selectedType)
                     }
-                    return false
+                    return true
                 }
             })
+
+
 
             binding.rvDestinations.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
@@ -122,12 +118,19 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                     override suspend fun emit(value: DestinationState) {
                         when (value) {
                             is DestinationState.Success -> {
-                                delay(2000L)
+                                delay(500L)
                                 binding.shimmerLayout.stopShimmer()
                                 binding.shimmerLayout.isVisible = false
                                 binding.rvDestinations.isVisible = true
                                 binding.swipeRefreshLayout.isRefreshing = false
-                                adapter.addDestinations(value.destinations)
+
+                                // pake current page, karena di halaman ini kita dapat mengscroll untuk untuk load data, cari data sesuai nama tipe.
+                                // Apalagi misalkan ada banyak taman yang di bagi beberapa page
+                                if (currentPage == 1) {
+                                    adapter.updateDestinations(value.destinations)
+                                } else {
+                                    adapter.addDestinations(value.destinations)
+                                }
 
                                 isLoading = false
                             }
