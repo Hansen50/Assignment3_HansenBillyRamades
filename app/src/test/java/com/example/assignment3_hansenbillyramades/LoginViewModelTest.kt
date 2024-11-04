@@ -7,10 +7,10 @@ import com.example.assignment3_hansenbillyramades.domain.model.User
 import com.example.assignment3_hansenbillyramades.domain.usecase.LoginUseCase
 import com.example.assignment3_hansenbillyramades.presentation.viewModel.LoginViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
-import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -26,7 +26,7 @@ class LoginViewModelTest {
     @get:Rule
     var instantExecutorRule = InstantTaskExecutorRule()
 
-    private val testDispatcher = TestCoroutineDispatcher()
+    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Mock
     private lateinit var loginUseCase: LoginUseCase
@@ -45,25 +45,23 @@ class LoginViewModelTest {
     @After
     fun tearDown() {
         Dispatchers.resetMain()
-        testDispatcher.cleanupTestCoroutines()
     }
 
     @Test
-    fun loginUserShouldReturnSuccess() = testDispatcher.runBlockingTest {
+    fun loginUserShouldReturnSuccess() = runTest {
         val loginRequest = LoginRequest("phincon@academy.com", "password")
         val user = User("doe", "John", "dummy@gmail.com", "dummy_token", "dummy_role", "dummy_photo")
         val loginResponse = Login(token = "dummy_token", user = user)
 
         `when`(loginUseCase(loginRequest)).thenReturn(loginResponse)
 
-
         loginViewModel.loginUsers(loginRequest)
         assertEquals(LoginState.Success(loginResponse), loginViewModel.loginState.value)
     }
 
     @Test
-    fun loginUserShouldReturnError() = testDispatcher.runBlockingTest {
-        val loginRequest = LoginRequest("phincon@academy.com", "wrofghgh")
+    fun loginUserShouldReturnError() = runTest {
+        val loginRequest = LoginRequest("phincon@academy.com", "wrongpassword")
         val errorMessage = "Login failed"
 
         `when`(loginUseCase(loginRequest)).thenThrow(RuntimeException(errorMessage))
@@ -74,7 +72,7 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun loginUserShouldHandleEmptyCredentials() = testDispatcher.runBlockingTest {
+    fun loginUserShouldHandleEmptyCredentials() = runTest {
         val loginRequest = LoginRequest("", "")
         val errorMessage = "Credentials cannot be empty"
 

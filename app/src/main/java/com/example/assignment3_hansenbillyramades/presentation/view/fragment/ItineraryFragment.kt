@@ -40,7 +40,7 @@ class ItineraryFragment : Fragment(), ListItineraryListener {
 
     override fun onResume() {
         super.onResume()
-        viewModel.loadItinerary() // pake fun resume ini biar list mereferens ke viewModel untuk update list setelah delete
+        viewModel.loadItinerary()
     }
 
     private fun setupRecyclerView() {
