@@ -39,8 +39,8 @@ class MainActivity : AppCompatActivity() {
             }
 
             // Ambil selectedType dari intent
-            val selectedType = intent.getStringExtra(PreferencesTravelActivity.EXTRA_SELECTED_TYPE) ?: ""
-            preferenceDataStore.getSelectedRecommendationType()
+            //val selectedType = intent.getStringExtra(PreferencesTravelActivity.EXTRA_SELECTED_TYPE) ?: ""
+            val selectedType = preferenceDataStore.getSelectedRecommendationType()
 
             binding.bottomNav.setOnItemSelectedListener(object :
                 NavigationBarView.OnItemSelectedListener {

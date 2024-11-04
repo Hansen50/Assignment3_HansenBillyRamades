@@ -4,58 +4,39 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import com.example.assignment3_hansenbillyramades.data.source.local.PreferenceDataStore
+import androidx.lifecycle.Observer
 import com.example.assignment3_hansenbillyramades.data.source.local.dataStore
 import com.example.assignment3_hansenbillyramades.databinding.ActivitySplashScreenBinding
+import com.example.assignment3_hansenbillyramades.presentation.viewModel.SplashScreenViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SplashScreenActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySplashScreenBinding
-    private val splashDelay = 1500L
-    private lateinit var preferenceDataStore: PreferenceDataStore
+    private val splashDelay = 500L
+    private val splashScreenViewModel: SplashScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySplashScreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        preferenceDataStore = PreferenceDataStore.getInstance(dataStore)
-
         Handler(Looper.getMainLooper()).postDelayed({
-            getTokenFromDataStore()
+            splashScreenViewModel.fetchUserToken()
         }, splashDelay)
-    }
 
-    private fun getRecommendedSelected() {
-        lifecycleScope.launch {
-            val userRecommended = preferenceDataStore.getSelectedRecommendationType()
-
-
-        }
-    }
-
-    private fun getTokenFromDataStore() {
-        lifecycleScope.launch {
-            try {
-                val userDetails = preferenceDataStore.getUserDetails()
-                val token = userDetails?.token
-
-                val intent = if (token != null) {
-                    Intent(this@SplashScreenActivity, MainActivity::class.java).apply {
-                        putExtra("TOKEN", token)
-                    }
-                } else {
-                    Intent(this@SplashScreenActivity, LoginActivity::class.java)
+        splashScreenViewModel.userToken.observe(this, Observer { token ->
+            val intent = if (token != null) {
+                Intent(this, MainActivity::class.java).apply {
+                    putExtra("TOKEN", token)
                 }
-                startActivity(intent)
-                finish()
-            } catch (e: Exception) {
-                e.printStackTrace()
+            } else {
+                Intent(this, LoginActivity::class.java)
             }
-        }
+            startActivity(intent)
+            finish()
+        })
     }
 }

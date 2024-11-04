@@ -50,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
                         val user = state.login.user
                         viewModel.setUserDetails(user)
 
-                        // Periksa status onboarded sebelum menentukan navigasi
+
                         val isOnboarded =
                             preferenceDataStore.isUserOnboarded() // Dapatkan status onboarded
                         val intent = if (isOnboarded) {
@@ -69,7 +69,7 @@ class LoginActivity : AppCompatActivity() {
                     }
 
                     is LoginState.Loading -> {
-                        // Tampilkan loading jika perlu
+
                     }
                 }
             }

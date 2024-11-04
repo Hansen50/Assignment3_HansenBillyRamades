@@ -1,6 +1,8 @@
 package com.example.assignment3_hansenbillyramades.presentation.viewModel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.liveData
 import androidx.lifecycle.viewModelScope
 import com.example.assignment3_hansenbillyramades.data.source.local.PreferenceDataStore
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,9 +17,13 @@ class PreferencesTravelViewModel @Inject constructor(
     // Menyimpan tipe rekomendasi yang dipilih
     fun saveSelectedRecommendationType(type: String) {
         viewModelScope.launch {
-            preferenceDataStore.setRecommendationSelected(true) // Tandai bahwa rekomendasi telah dipilih
-            preferenceDataStore.setSelectedRecommendationType(type) // Simpan tipe rekomendasi
+            preferenceDataStore.setRecommendationSelected(true)
+            preferenceDataStore.setSelectedRecommendationType(type)
         }
+    }
+
+    fun getSelectedRecommendationType(): LiveData<String?> = liveData {
+        emit(preferenceDataStore.getSelectedRecommendationType())
     }
 
     // Memeriksa apakah rekomendasi telah dipilih

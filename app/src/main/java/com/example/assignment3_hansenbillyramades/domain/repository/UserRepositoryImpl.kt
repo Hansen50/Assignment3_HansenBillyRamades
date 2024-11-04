@@ -19,7 +19,7 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun login(request: LoginRequest): LoginDto {
         val loginDto = remoteDataSource.login(request)
-        Log.d("UserRepositoryImpl", "Login Response: $loginDto")
+//        Log.d("UserRepositoryImpl", "Login Response: $loginDto")
         return loginDto
     }
 
@@ -54,7 +54,8 @@ fun LoginDto.toLogin(): Login {
             email = this.data.email,
             phone = this.data.phone,
             avatar = this.data.avatar,
-            token = this.data.token
+            token = this.data.token,
+
         )
     )
 }

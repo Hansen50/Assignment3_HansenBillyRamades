@@ -2,18 +2,20 @@ package com.example.assignment3_hansenbillyramades.presentation.view.activity
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import com.example.assignment3_hansenbillyramades.R
 import com.example.assignment3_hansenbillyramades.databinding.ActivityPreferencesTravelBinding
 import com.example.assignment3_hansenbillyramades.presentation.viewModel.PreferencesTravelViewModel
+import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class PreferencesTravelActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPreferencesTravelBinding
     private val viewModel: PreferencesTravelViewModel by viewModels()
-    private var selectedChipId: Int = R.id.chip1
+    private var selectedChipId: Int? = null
 
     companion object {
         const val EXTRA_SELECTED_TYPE = "selected_type"
@@ -34,20 +36,22 @@ class PreferencesTravelActivity : AppCompatActivity() {
                 // Kembali ke halaman sebelumnya
                 onBackPressedDispatcher.onBackPressed()
             }
-
-
         }
-
 
         var selectedType: String? = null
 
-//        viewModel.checkIfRecommendationSelected { hasSelected ->
-//            if (hasSelected) {
-//                val intent = Intent(this, MainActivity::class.java)
-//                startActivity(intent)
-//                finish()
-//            }
-//        }
+        viewModel.getSelectedRecommendationType().observe(this) { type ->
+            selectedType = type
+
+            for (i in 0 until binding.chipGroup.childCount) {
+                val chip = binding.chipGroup.getChildAt(i) as Chip
+                if (chip.text.toString() == type) {
+                    binding.chipGroup.check(chip.id)
+                    return@observe
+                }
+            }
+            binding.chipGroup.clearCheck()
+        }
 
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
             val selectedChip = findViewById<com.google.android.material.chip.Chip>(checkedId)
@@ -58,12 +62,13 @@ class PreferencesTravelActivity : AppCompatActivity() {
             }
         }
 
-
         binding.nextButton.setOnClickListener {
-            selectedType?.let { type ->
-                viewModel.saveSelectedRecommendationType(type)
+            if (selectedType == null) {
+                Toast.makeText(this, "Please select a travel preference.", Toast.LENGTH_SHORT).show()
+            } else {
+                viewModel.saveSelectedRecommendationType(selectedType!!)
                 val intent = Intent(this@PreferencesTravelActivity, MainActivity::class.java).apply {
-                    putExtra(EXTRA_SELECTED_TYPE, type)
+                    putExtra(EXTRA_SELECTED_TYPE, selectedType)
                 }
                 startActivity(intent)
                 finish()

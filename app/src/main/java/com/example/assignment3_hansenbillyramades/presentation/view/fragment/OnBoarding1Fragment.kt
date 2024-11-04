@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.example.assignment3_hansenbillyramades.databinding.FragmentOnBoarding1Binding
 import com.example.assignment3_hansenbillyramades.presentation.view.activity.MainActivity
+import com.example.assignment3_hansenbillyramades.presentation.view.activity.PreferencesTravelActivity
 import com.example.assignment3_hansenbillyramades.presentation.viewModel.OnBoardViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -34,8 +35,7 @@ class OnBoarding1Fragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewLifecycleOwner.lifecycleScope.launch {
-            val token = "Bearer ${viewModel.getToken()}"
-            // Gunakan token sesuai kebutuhan di sini
+            viewModel.getToken()
         }
 
         binding.btnNext.setOnClickListener {
@@ -58,7 +58,7 @@ class OnBoarding1Fragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.setOnboarded(true)
         }
-        val intent = Intent(requireContext(), MainActivity::class.java)
+        val intent = Intent(requireContext(), PreferencesTravelActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }

@@ -64,6 +64,7 @@ class PreferenceDataStore private constructor(private val dataStore: DataStore<P
         }
     }
 
+
     // Mengambil tipe rekomendasi yang dipilih
     suspend fun getSelectedRecommendationType(): String? {
         return dataStore.data.first()[DataStoreConstant.SELECTED_RECOMMENDATION_TYPE]
@@ -82,7 +83,8 @@ class PreferenceDataStore private constructor(private val dataStore: DataStore<P
                 email = preferences[DataStoreConstant.EMAIL] ?: "",
                 phone = preferences[DataStoreConstant.PHONE] ?: "",
                 avatar = preferences[DataStoreConstant.AVATAR] ?: "",
-                token = ""
+                token = "",
+
             )
         } else {
             null
@@ -99,7 +101,15 @@ class PreferenceDataStore private constructor(private val dataStore: DataStore<P
     }
 
     suspend fun clearUserData() {
-        dataStore.edit { preferences -> preferences.clear() }
+        dataStore.edit { preferences ->
+            preferences[DataStoreConstant.TOKEN] = ""
+            preferences[DataStoreConstant.IS_LOGIN] = false
+            preferences[DataStoreConstant.FIRST_NAME] = ""
+            preferences[DataStoreConstant.LAST_NAME] = ""
+            preferences[DataStoreConstant.EMAIL] = ""
+            preferences[DataStoreConstant.PHONE] = ""
+            preferences[DataStoreConstant.AVATAR] = ""
+        }
     }
 
     companion object {

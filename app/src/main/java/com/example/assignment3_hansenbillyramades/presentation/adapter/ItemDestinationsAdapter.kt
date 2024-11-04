@@ -58,7 +58,6 @@ class ItemDestinationsAdapter(
         notifyDataSetChanged()
     }
 
-    // menambhakn daftar list apabila load baru
     fun addDestinations(newDestinations: List<Destinations>) {
         val startPosition = listDestination.size
         val updatedList = listDestination.toMutableList()

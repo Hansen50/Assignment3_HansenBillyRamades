@@ -42,7 +42,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="You Itinerary"
+        android:text="Your Itinerary"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,5 +60,17 @@
         app:layout_constraintTop_toBottomOf="@id/tv_your_itinerary"
         tools:listitem="@layout/list_item_my_trip"/>
 
+    <TextView
+        android:id="@+id/tv_no_itinerary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="No Itinerary Available"
+        android:textSize="16sp"
+        android:textColor="@android:color/darker_gray"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@id/tv_your_itinerary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

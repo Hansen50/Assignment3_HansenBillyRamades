@@ -2,6 +2,7 @@ package com.example.assignment3_hansenbillyramades.presentation.view.fragment
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -52,6 +53,7 @@ class ExploreFragment : Fragment(), ListDestinationListener {
             token = "Bearer ${viewModel.getToken()}"
             selectedType = arguments?.getString("SELECTED_TYPE") ?: ""
             selectedType = viewModel.getSelectedType() ?: ""
+            Log.d("ExploreFragment", "Selected Type: $selectedType")
             if (selectedType.isNotEmpty()) {
                 binding.tvYourRecommendation.text = selectedType
             }
@@ -126,7 +128,6 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                                 binding.rvDestinations.isVisible = true
                                 binding.swipeRefreshLayout.isRefreshing = false
                                 adapter.addDestinations(value.destinations)
-//                                adapter.updateDestinations(value.destinations)
 
                                 isLoading = false
                             }
@@ -173,7 +174,7 @@ class ExploreFragment : Fragment(), ListDestinationListener {
                     }
                 })
 
-}
+            }
 
         }
     }

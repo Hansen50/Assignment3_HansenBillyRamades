@@ -45,7 +45,6 @@ class CreateItineraryActivity : AppCompatActivity() {
         val destination = intent.getParcelableExtra<Destinations>("destination")
         isEditMode = intent.getBooleanExtra("isEdit", false)
 
-        // Jika dalam mode edit, ambil data itinerary yang ada
         if (isEditMode) {
             currentItinerary = intent.getParcelableExtra("itinerary")!!
             setupEditMode(currentItinerary)
@@ -134,7 +133,7 @@ class CreateItineraryActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
             val token = "Bearer ${viewModel.getToken()}"
-            viewModel.getDestinationDetail(destination.id, token, "", "")
+            viewModel.getDestinationDetail(destination.id, token, null, null)
         }
     }
 

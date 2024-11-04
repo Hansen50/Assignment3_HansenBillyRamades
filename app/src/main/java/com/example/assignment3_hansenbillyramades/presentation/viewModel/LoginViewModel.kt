@@ -32,10 +32,21 @@ class LoginViewModel @Inject constructor(
         loginUseCase.setUserDetails(user)
     }
 
+    fun setSelectedRecommendationType(type: String) {
+        viewModelScope.launch {
+            preferenceDataStore.setSelectedRecommendationType(type)
+        }
+    }
+
     fun loginUsers(request: LoginRequest) {
         viewModelScope.launch {
             _loginState.value = LoginState.Loading
             try {
+                // Validasi kredensial
+                if (request.email.isEmpty() || request.password.isEmpty()) {
+                    throw RuntimeException("Credentials cannot be empty")
+                }
+
                 val login = loginUseCase(request)
                 _loginState.value = LoginState.Success(login)
 

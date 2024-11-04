@@ -105,7 +105,6 @@ class ViewAllDestinationActivity : AppCompatActivity(), ListDestinationListener 
                             }
 
                             is DestinationState.Loading -> {
-                                // Optional: tampilkan progress loading jika diperlukan
                             }
 
                             else -> {}

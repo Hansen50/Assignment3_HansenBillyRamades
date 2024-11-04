@@ -6,21 +6,21 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.assignment3_hansenbillyramades.data.source.local.ItineraryEntity
-import com.example.assignment3_hansenbillyramades.data.source.local.TravelMateDatabase
 import com.example.assignment3_hansenbillyramades.databinding.FragmentItineraryBinding
 import com.example.assignment3_hansenbillyramades.presentation.adapter.ItemItineraryAdapter
 import com.example.assignment3_hansenbillyramades.presentation.listener.ListItineraryListener
 import com.example.assignment3_hansenbillyramades.presentation.view.activity.DetailItineraryActivity
-import kotlinx.coroutines.launch
+import com.example.assignment3_hansenbillyramades.presentation.viewmodel.ItineraryViewModel
 
 class ItineraryFragment : Fragment(), ListItineraryListener {
     private var _binding: FragmentItineraryBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: ItemItineraryAdapter
-    private lateinit var db: TravelMateDatabase
+
+    private val viewModel: ItineraryViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -32,15 +32,10 @@ class ItineraryFragment : Fragment(), ListItineraryListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        db = TravelMateDatabase.getDatabase(requireContext())
 
         setupRecyclerView()
-        loadItinerary()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        loadItinerary()
+        observeViewModel()
+        viewModel.loadItinerary()
     }
 
     private fun setupRecyclerView() {
@@ -49,10 +44,16 @@ class ItineraryFragment : Fragment(), ListItineraryListener {
         binding.rvItinerary.adapter = adapter
     }
 
-    private fun loadItinerary() {
-        lifecycleScope.launch {
-            val itinerary = db.itineraryDao().getItinerary()
+    private fun observeViewModel() {
+        // Observe itinerary list
+        viewModel.itineraryList.observe(viewLifecycleOwner) { itinerary ->
             adapter.updateData(itinerary)
+        }
+
+        // Observe empty state
+        viewModel.isItineraryEmpty.observe(viewLifecycleOwner) { isEmpty ->
+            binding.tvNoItinerary.visibility = if (isEmpty) View.VISIBLE else View.GONE
+            binding.rvItinerary.visibility = if (isEmpty) View.GONE else View.VISIBLE
         }
     }
 
